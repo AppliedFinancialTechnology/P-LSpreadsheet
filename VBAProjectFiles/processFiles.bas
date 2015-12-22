@@ -13,7 +13,7 @@ Sub process()
     Dim strCopyRange As String
     Set curWb = ThisWorkbook
     Set curWs = curWb.Sheets("Main")
-    If Not InStr(1, curWs.Range("c3").Value, Format(Date - 1, "yyyymmdd")) > 0 Or curWs.Range("c3").Value = "" Then
+    If Not InStr(1, curWs.Range("c3").Value, Format(Date, "yyyymmdd")) > 0 Or curWs.Range("c3").Value = "" Then
         proceed = True
         If fileNames <> "" Then
             fileNames = fileNames & "," & "IBFile"
@@ -21,7 +21,7 @@ Sub process()
             fileNames = "IBFile"
         End If
     End If
-    If Not InStr(1, curWs.Range("c5").Value, Format(Date - 1, "yyyymmdd")) > 0 Or curWs.Range("c5").Value = "" Then
+    If Not InStr(1, curWs.Range("c5").Value, Format(Date, "yyyymmdd")) > 0 Or curWs.Range("c5").Value = "" Then
         proceed = True
         If fileNames <> "" Then
             fileNames = fileNames & "," & "Cash File"
@@ -29,7 +29,7 @@ Sub process()
             fileNames = "Cash File"
         End If
     End If
-    If Not InStr(1, curWs.Range("c7").Value, Format(Date - 1, "yyyymmdd")) > 0 Or curWs.Range("c7").Value = "" Then
+    If Not InStr(1, curWs.Range("c7").Value, Format(Date, "yyyymmdd")) > 0 Or curWs.Range("c7").Value = "" Then
         proceed = True
         If fileNames <> "" Then
             fileNames = fileNames & "," & "Position File"
@@ -37,7 +37,7 @@ Sub process()
             fileNames = "Position File"
         End If
     End If
-    If Not InStr(1, curWs.Range("c9").Value, Format(Date - 1, "yyyymmdd")) > 0 Or curWs.Range("c9").Value = "" Then
+    If Not InStr(1, curWs.Range("c9").Value, Format(Date, "yyyymmdd")) > 0 Or curWs.Range("c9").Value = "" Then
         proceed = True
         If fileNames <> "" Then
             fileNames = fileNames & "," & "TXS File"
@@ -59,19 +59,19 @@ Sub process()
         destWs.Range("BS9:DR9").Copy
         Set newWs = destWb.Sheets("ABN Merge")
         strCopyRange = "B" & newWs.Range("a65536").End(xlUp).Row + 1
-        If newWs.Range(strCopyRange).Offset(-1, -1).Value = Date - 1 Then
+        If newWs.Range(strCopyRange).Offset(-1, -1).Value = Date Then
             If MsgBox("Data already exists, Yes to Replace or No to New Entry?", vbCritical + vbYesNo, "Data Already Exists") = vbNo Then
                 newWs.Range(strCopyRange).PasteSpecial xlPasteValues
-                newWs.Range(strCopyRange).Offset(0, -1).Value = Date - 1
+                newWs.Range(strCopyRange).Offset(0, -1).Value = Date
             Else
                 strCopyRange = Range(strCopyRange).Offset(-1, 0).Address
                 newWs.Range(strCopyRange).PasteSpecial xlPasteValues
-                newWs.Range(strCopyRange).Offset(0, -1).Value = Date - 1
+                newWs.Range(strCopyRange).Offset(0, -1).Value = Date
             End If
         Else
             strCopyRange = Range(strCopyRange).Offset(-1, 0).Address
             newWs.Range(strCopyRange).PasteSpecial xlPasteValues
-            newWs.Range(strCopyRange).Offset(0, -1).Value = Date - 1
+            newWs.Range(strCopyRange).Offset(0, -1).Value = Date
         
         End If
         Application.CutCopyMode = False
