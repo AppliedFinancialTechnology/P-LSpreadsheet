@@ -6,6 +6,7 @@ Dim newWb As Workbook
 Dim destWb As Workbook
 Dim destWs As Worksheet
 Dim newWs As Worksheet
+Dim tradedate As Date
 
 Sub process()
     Dim proceed As Boolean
@@ -52,6 +53,7 @@ Sub process()
     End If
     If openPNL_file = True Then
         Application.ScreenUpdating = False
+        processIBFile
         processFile curWs.Range("c5").Value, "ABN Input", "A:M", "A1"
         processFile curWs.Range("c7").Value, "ABN Input", "I:V", "S1"
         processFile curWs.Range("c9").Value, "ABN Input", "N:AB", "AL1"
@@ -59,19 +61,19 @@ Sub process()
         destWs.Range("BS9:DR9").Copy
         Set newWs = destWb.Sheets("ABN Merge")
         strCopyRange = "B" & newWs.Range("a65536").End(xlUp).Row + 1
-        If newWs.Range(strCopyRange).Offset(-1, -1).Value = Date Then
+        If newWs.Range(strCopyRange).Offset(-1, -1).Value = tradedate Then
             If MsgBox("Data already exists, Yes to Replace or No to New Entry?", vbCritical + vbYesNo, "Data Already Exists") = vbNo Then
                 newWs.Range(strCopyRange).PasteSpecial xlPasteValues
-                newWs.Range(strCopyRange).Offset(0, -1).Value = Date
+                newWs.Range(strCopyRange).Offset(0, -1).Value = tradedate
             Else
                 strCopyRange = Range(strCopyRange).Offset(-1, 0).Address
                 newWs.Range(strCopyRange).PasteSpecial xlPasteValues
-                newWs.Range(strCopyRange).Offset(0, -1).Value = Date
+                newWs.Range(strCopyRange).Offset(0, -1).Value = tradedate
             End If
         Else
             strCopyRange = Range(strCopyRange).Offset(-1, 0).Address
             newWs.Range(strCopyRange).PasteSpecial xlPasteValues
-            newWs.Range(strCopyRange).Offset(0, -1).Value = Date
+            newWs.Range(strCopyRange).Offset(0, -1).Value = tradedate
         
         End If
         Application.CutCopyMode = False
@@ -111,6 +113,15 @@ Function processFile(fileName As String, destShtname As String, copyRange As Str
 End Function
 Function processIBFile() As Boolean
     Set newWb = Application.Workbooks.Open(curWs.Range("c3").Value)
+    Set destWs = destWb.Sheets("IB Input")
+    Dim finalRow As Long
+    finalRow = newWb.Sheets(1).Cells.Find("Realized & Unrealized Performance Summary").Row - 1
     
+    newWb.Sheets(1).Range("a1:K" & finalRow).Copy destWs.Range("a1")
+    'destWs.Range("a1").PasteSpecial xlPasteValues
+    Application.CutCopyMode = False
+    newWb.Saved = True
+    newWb.Close False
+    tradedate = DateValue(destWs.Range("a3").Value)
 End Function
 
