@@ -115,7 +115,7 @@ Function processIBFile() As Boolean
     Set newWb = Application.Workbooks.Open(curWs.Range("c3").Value)
     Set destWs = destWb.Sheets("IB Input")
     Dim finalRow As Long
-    finalRow = newWb.Sheets(1).Cells.Find("Realized & Unrealized Performance Summary").Row - 1
+    finalRow = newWb.Sheets(1).Cells.Find("Total (All Assets)").Row
     
     newWb.Sheets(1).Range("a1:K" & finalRow).Copy destWs.Range("a1")
     'destWs.Range("a1").PasteSpecial xlPasteValues
