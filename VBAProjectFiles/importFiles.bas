@@ -51,7 +51,11 @@ Public Function select_zipFiles(filestr As String) As String
     If InStr(1, select_zipFiles, ".zip") > 0 Or InStr(1, select_zipFiles, ".rar") > 0 Then
         Unzip1 (select_zipFiles)
         select_zipFiles = Replace(Replace(Replace(select_zipFiles, ".zip", ""), ".rar", ""), "+", " ")
-        If InStr(1, select_zipFiles, ".") = 0 Then select_zipFiles = select_zipFiles & ".xls"
+        If InStr(1, select_zipFiles, ".") = 0 Then
+            select_zipFiles = select_zipFiles & ".xls"
+            Exit Function
+        End If
+        If Len(select_zipFiles) - InStr(1, select_zipFiles, ".") > 3 Then select_zipFiles = Left(select_zipFiles, InStr(1, select_zipFiles, ".") + 3)
     End If
     
     
